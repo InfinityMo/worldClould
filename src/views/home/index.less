@@ -1,0 +1,89 @@
+.flex {
+  display: flex;
+}
+
+.flex-item-center {
+  display: flex;
+  align-items: center;
+}
+
+#chart {
+  width: 100%;
+  height: 400px;
+}
+
+.no-data {
+  padding: 50px 0 10px 0;
+  text-align: center;
+
+  img {
+    height: 300px;
+  }
+
+  p {
+    padding-top: 10px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+}
+
+.setting {
+  padding: 15px;
+
+  .import-data {
+    .import-btn {
+      .a-upload {
+        display: inline-block;
+        padding: 4px 10px;
+        height: 20px;
+        line-height: 20px;
+        position: relative;
+        cursor: pointer;
+        color: #fff;
+        background: #409EFF;
+        border: 1px solid #409EFF;
+        border-radius: 4px;
+        overflow: hidden;
+
+        input {
+          position: absolute;
+          font-size: 100px;
+          right: 0;
+          top: 0;
+          opacity: 0;
+          filter: alpha(opacity=0);
+          cursor: pointer
+        }
+      }
+
+      .a-upload:hover {
+        color: #fff;
+        background: #407CFF;
+        border-color: #407CFF;
+        text-decoration: none
+      }
+    }
+
+    .file-name {
+      color: #52c41a;
+      margin-left: 10px;
+    }
+  }
+
+  .set-item {
+    margin-bottom: 10px;
+
+    .title {
+      margin-right: 10px;
+    }
+
+    .slider {
+      width: 50%;
+      min-width: 500px;
+    }
+
+    .row {
+      margin-right: 50px;
+    }
+  }
+}
