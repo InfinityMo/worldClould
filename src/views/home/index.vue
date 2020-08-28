@@ -221,10 +221,6 @@ export default {
         tooltip: {
           show: true
         },
-        grid: {
-          top: '20%',
-          bottom: '20%'
-        },
         toolbox: {
           feature: {
             saveAsImage: {
