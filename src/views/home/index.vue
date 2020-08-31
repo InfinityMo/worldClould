@@ -12,7 +12,9 @@
     </div>
     <div class="setting">
       <div class="import-data flex-item-center">
-        <div class="import-btn">
+        <div class="download-template"
+             @click="exportTemplate">下载模板</div>
+        <div class="import-btn flex-item-center">
           <a class="a-upload">导入Excel
             <input type="file"
                    ref="upload"
@@ -175,16 +177,37 @@ export default {
     }
   },
   mounted () {
-    // this.createChart()
+
   },
   methods: {
+    exportTemplate () {
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['name', 'value']// 头
+        const filterVal = ['name', 'value']// 值
+        const list = [
+          {
+            name: '这是标题',
+            value: '这是值'
+          }
+        ]
+        const data = this.formatJson(filterVal, list)
+        excel.exportJsonToExcel({
+          header: tHeader,
+          data,
+          filename: '词云图模板'
+        })
+      })
+    },
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
     readExcel (e) {
       const that = this
       const files = e.target.files
       if (files.length <= 0) { // 如果没有文件名
         return false
       } else if (!/\.(xls|xlsx)$/.test(files[0].name.toLowerCase())) {
-        this.$message.error('上传格式不正确，请上传xls或者xlsx的Excel文件！')
+        this.$message.error('文件格式不正确，请上传xls或者xlsx的Excel文件！')
         return false
       }
       const fileReader = new FileReader()
@@ -197,19 +220,29 @@ export default {
           const wsname = workbook.SheetNames[0]// 取第一张表
           const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname])// 生成json表格内容
           that.excelData = []// 清空接收数据
-          for (let i = 0; i < ws.length; i++) {
-            const sheetData = {
-              name: ws[i].name,
-              value: ws[i].value
-            }
-            that.excelData.push(sheetData)
-          }
-          this.fileName = files[0].name
-          this.$refs.upload.value = ''
-          this.$nextTick(() => {
-            this.createChart()
+          const everyFlag = ws.every((i) => {
+            return Object.keys(i)[0] === 'name' && Object.keys(i)[1] === 'value'
           })
+          if (everyFlag) {
+            ws.map((i) => {
+              if (i.name && i.value) {
+                that.excelData.push({
+                  name: i.name,
+                  value: i.value
+                })
+              }
+            })
+            this.fileName = files[0].name
+            this.$nextTick(() => {
+              this.createChart()
+            })
+          } else {
+            this.$message.error('导入错误，请使用模板导入！')
+            return false
+          }
+          this.$refs.upload.value = ''
         } catch (e) {
+          this.$message.error('导入错误，请使用模板导入！')
           return false
         }
       }
